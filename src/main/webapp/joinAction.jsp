@@ -21,6 +21,7 @@
 <body>
 <%
 	String userID = null;
+	String userName = null;
 	
 	//자신에게 할당된 세션 아이디를 담는 공간을 만드는 것.
 	if(session.getAttribute("userID") != null) {

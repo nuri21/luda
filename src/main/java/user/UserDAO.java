@@ -19,7 +19,7 @@ public class UserDAO {
 			String DBurl = "jdbc:mariadb://localhost/nssiwl";
 			String DBid = "nssiwl";
 			String DBpass = "dmswls1130";
-			Class.forName("org.mariadb.jdbc.Driver"); 
+			Class.forName("org.mariadb.jdbc.Driver");
 			conn = DriverManager.getConnection(DBurl, DBid, DBpass);			
 		} catch (Exception e) {
 			e.printStackTrace();

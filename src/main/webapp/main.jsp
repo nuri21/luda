@@ -2,7 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter"%>
 <%@ page import="user.UserDAO" %>
-<%@ page import="java.io.PrintWriter" %>
+<%@ page import="board.BoardDAO" %>  
+<%@ page import="board.Board" %>  
+<%@ page import="java.util.ArrayList" %>
 <jsp:useBean id="user" class="user.User" scope="page"></jsp:useBean>
 <jsp:useBean id="board" class="board.Board" scope="page"></jsp:useBean>
 <jsp:setPropertyname="user" property="userID" />
@@ -81,6 +83,49 @@
             center: 'title',
             right: 'next'
                 },
+            events: [
+                <%   
+	        		int pageSize = 10; // 한 페이지에 출력할 레코드 수
+	
+	        		// 페이지 링크를 클릭한 번호 / 현재 페이지
+	        		String pageNumber = request.getParameter("pageNumber");
+	        		%>	
+
+	        		<%
+	        		String userID = null;
+	        		String userName = null;
+	        		if(session.getAttribute("userID") != null ) {
+	        			userID = (String)session.getAttribute("userID");
+	        		}
+	        		%>
+	        		
+	        		<%
+	        		if (pageNumber == null){ // 클릭한게 없으면 1번 페이지
+	        			pageNumber = "1";
+	        		}
+	        		// 연산을 하기 위한 pageNumber 형변환 / 현재 페이지
+	        		int currentPage = Integer.parseInt(pageNumber);
+	
+	        		// 해당 페이지에서 시작할 레코드 / 마지막 레코드
+	        		int startRow = ((currentPage - 1) * 10);
+	        		int endRow = currentPage * pageSize;
+                
+	        		BoardDAO boardDAO = new BoardDAO();
+	        		ArrayList<Board> list = boardDAO.getList(userID, startRow);
+	        		int count = boardDAO.getCount(userID);
+                    
+                 %>  
+                        
+                 <%for(int i = 0; i < list.size(); i++) {%>
+                    {
+                       
+                       title: '<%=list.get(i).getContent()%>', 
+                       start: '<%= list.get(i).getStartDate()%>',
+                       end: '<%= list.get(i).getEndDate()%>'
+                    },
+                 <%} %>
+             ],
+
             lang : "ko"
             , editable : true
             , eventLimit : true
@@ -179,13 +224,6 @@
     </head>
 
 <body>
-	<%
-		String userID = null;
-		String userName = null;
-		if(session.getAttribute("userID") != null ) {
-			userID = (String)session.getAttribute("userID");
-		}
-	%>
     <div class="wrap">
         <div class="main_wrap">
             <header>

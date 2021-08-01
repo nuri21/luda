@@ -7,6 +7,7 @@
 <jsp:useBean id="board" class="board.Board" scope="page"></jsp:useBean>
 <jsp:setPropertyname="user" property="userID" />
 
+
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -27,13 +28,16 @@
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="script/main_change3.js"></script>
     <script src="script/main_diary.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <style>
   .carousel-inner img {
     width: 100%;
     height: 100%;
   }
   
-     @font-face {
+   @font-face {
     font-family: 'Pretendard-Light';
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
     font-weight: 300;
@@ -42,19 +46,21 @@
 	body {
 		font-family: 'Pretendard-Light';
 	} 
+   
   </style>
+  
     <title>루다</title>
     </head>
+
 <body>
 
 	<%
 		String userID = null;
-		String userName = null;
 		if(session.getAttribute("userID") != null ) {
 			userID = (String)session.getAttribute("userID");
 		}
+		
 	%>
-	
     <div class="wrap">
         <div class="main_wrap">
             <header>
@@ -68,14 +74,14 @@
                             <div class="text_box"><a href="main.jsp">Calendar</a></div>
                         </div>
                         <div class="diary">
-                            <div class="icon_box"><a href="main_diary.jsp"><img src="img/diary_icon.svg" alt=""></a></div>
-                            <div class="text_box"><a href="main_diary.jsp">Diary</a></div>
+                            <div class="icon_box"><a href="main_diary.html"><img src="img/diary_icon.svg" alt=""></a></div>
+                            <div class="text_box"><a href="main_diary.html">Diary</a></div>
                         </div>
                     </div>
                 </div>
                 <div class="option_box">
-                    <div class="icon_box"><a href="setting.jsp"><img src="img/settings_icon.svg" alt=""></div>
-                    <div class="text_box"><a href="setting.jsp">개발자 문의</a></div>
+                    <div class="icon_box"><a href="setting.html"><img src="img/settings_icon.svg" alt=""></div>
+                    <div class="text_box"><a href="setting.html">개발자 문의</a></div>
                 </div>
                 <div class="moblie_menu"><!--모바일 화면에서만 쓰이는 메뉴 pc화면에서는 안보임-->
                     <div class="profile">
@@ -165,7 +171,7 @@
                             <form class="datepicker">
                                 <div class="text_box">날짜 입력</div>
                                 <input type="text" class="date_input" name="diary_date">
-                                <input class="button" type="submit" value="다이어리 조회">
+                                <input class="button" type="submit" value="다이어리 조회"></input>
                             </form>
                         </div>
                     </div>
@@ -193,8 +199,8 @@
                         <span></span>
                         <span></span>
                     </div>
-   				<div class="name_box" style="font-size:14px;"><%=userID%></div>
-                <div class="btn_box">
+                    <div class="name_box"><%=userID%></div>
+                    <div class="btn_box">
                     <div class="logout_btn">
                         <div class="text"><a href="logout.jsp">로그아웃</div>
                     </div>
@@ -204,7 +210,7 @@
                     <div class="text_contents_btn">
                         <div class="text"><a href="list.jsp">작성글 목록</a></div>
                     </div>
-                </div>
+                    </div>
                 </div>
                 <form class="diary_edit_form" action="" method="post"> <!--form문으로 바꿔서 값을 jsp파일로 전달할 수 있게 수정-->
                     <div class="x_btn">
@@ -221,13 +227,13 @@
                         <input type="file" name="image">
                     </div>
                     <div class="img_preview">
-                        <img src="" alt="" id="input_img">
+                        <img src="" alt="">
                     </div> <!--이미지 업로드 하면 미리 볼 수 있는 컨테이너-->
                     <div class="contents_area">
                         <div class="text">내용</div>
                         <textarea id="diary_text"type="text" name="contents" rows="6" cols="30"></textarea>
                     </div>
-                    <input class="button" type="submit" value="일기쓰기">
+                    <input class="button" type="submit" value="일기 쓰기">
                 </form>
                 <div class="moblie_left_btn_box">
                     <div class="add_diary">+diary</div>

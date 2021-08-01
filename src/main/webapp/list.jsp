@@ -5,8 +5,7 @@
 <%@ page import="board.Board" %>  
 <%@ page import="java.util.ArrayList" %>
 <jsp:useBean id="user" class="user.User" scope="page"></jsp:useBean>
-<jsp:setPropertyname="user" property="userID" />    
-<jsp:setPropertyname="user" property="userName" />     
+<jsp:setPropertyname="user" property="userID" />       
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,10 +43,6 @@ a. a:hover {
 		if(session.getAttribute("userID") != null) {
 			userID = (String)session.getAttribute("userID");
 		}
-		int pageNumber = 1 ; 
-		if(request.getParameter("pageNumber") != null){
-			pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
-		}
 		
 		if (userID == null) {
 		   PrintWriter script = response.getWriter();
@@ -56,7 +51,25 @@ a. a:hover {
 		   script.println("location.href = 'login.jsp'");
 		   script.println("</script>");  
 		}
+		
+		
+		int pageSize = 10; // 한 페이지에 출력할 레코드 수
 
+		// 페이지 링크를 클릭한 번호 / 현재 페이지
+		String pageNumber = request.getParameter("pageNumber");
+		if (pageNumber == null){ // 클릭한게 없으면 1번 페이지
+			pageNumber = "1";
+		}
+		// 연산을 하기 위한 pageNumber 형변환 / 현재 페이지
+		int currentPage = Integer.parseInt(pageNumber);
+
+		// 해당 페이지에서 시작할 레코드 / 마지막 레코드
+		int startRow = ((currentPage - 1) * 10);
+		int endRow = currentPage * pageSize;
+		
+		BoardDAO boardDAO = new BoardDAO();
+		ArrayList<Board> list = boardDAO.getList(userID, startRow);
+		int count = boardDAO.getCount(userID);
 		
 	%>
 
@@ -76,44 +89,83 @@ a. a:hover {
 
   <!-- Tab panes -->
   <div class="tab-content">
-    <div id="Calendar" class="container tab-pane active"><br>
-      <table class="table table-striped" style="text-align:center; border: 1px solid #dddddd; overflow: hidden;">
-		  <thead>
-		    <tr>
-		  	<th style="backgroud-color:#eeeeee; text-aligin:center;">번호</th>
-		    <th style="backgroud-color:#eeeeee; text-aligin:center;">시작일</th>
-		    <th style="backgroud-color:#eeeeee; text-aligin:center;">종료일</th>
-		    <th style="backgroud-color:#eeeeee; text-aligin:center;">내용</th>
-		    <th style="backgroud-color:#eeeeee; text-aligin:center;">작성일</th>
+  	<div id="Calendar" class="container tab-pane active"><br>
+  	<table class="table table-striped" style="text-align:center; border: 1px solid #dddddd; overflow: hidden;">
+		<thead>
+			<tr>
+		  		<th style="backgroud-color:#eeeeee; text-aligin:center;">번호</th>
+		    	<th style="backgroud-color:#eeeeee; text-aligin:center;">시작일</th>
+		    	<th style="backgroud-color:#eeeeee; text-aligin:center;">종료일</th>
+		    	<th style="backgroud-color:#eeeeee; text-aligin:center;">내용</th>
+		    	<th style="backgroud-color:#eeeeee; text-aligin:center;">작성일</th>
 		    </tr>
-		   </thead>
-		   <tbody>
-		   <%
-		   	BoardDAO boardDAO = new BoardDAO();
-		   	ArrayList<Board> list = boardDAO.find(userID);
-		   	for(int i = 0; i<list.size(); i++) {
-		   %>
-		   <tr>
-		   		<td><%=list.get(i).getIndex() %></td>
+	    </thead>
+		<tbody>
+			<%
+				for(int i = 0; i<list.size(); i++) {
+			%>
+			<tr>
+				<td><%=list.get(i).getIndex() %></td>
 		   		<td><%=list.get(i).getStartDate() %></td>
 		   		<td><%=list.get(i).getEndDate() %></td>
 		   		<td><a href="view.jsp?index=<%=list.get(i).getIndex()%>"><%=list.get(i).getContent() %></a></td>
-		   		<td><%= list.get(i).getWriteDate().substring(0, 11) + list.get(i).getWriteDate().substring(11, 13) + "시" + list.get(i).getWriteDate().substring(14, 16) + "분" %></td> 
-		   		</tr>
-		   		<% } %>
-		   </tbody>
+		   		<td>
+		   			<%= list.get(i).getWriteDate().substring(0, 11) + list.get(i).getWriteDate().substring(11, 13) + ":" + list.get(i).getWriteDate().substring(14, 16)%>
+	   			</td>
+	   		</tr>
+		   	<% } %>
+		   	
+		   	<tr>
+				<td colspan="6" align="center">
+					<%	// 페이징  처리
+						if(count > 0){
+							// 총 페이지의 수
+							int pageCount = count / pageSize + (count%pageSize == 0 ? 0 : 1);
+							
+							// 한 페이지에 보여줄 페이지 블럭(링크) 수
+							int pageBlock = 5;
+							
+							// 한 페이지에 보여줄 시작 및 끝 번호(예 : 1, 2, 3 ~ 10 / 11, 12, 13 ~ 20)
+							int startPage = ((currentPage-1)/pageBlock) * pageBlock + 1;
+							int endPage = startPage + pageBlock - 1;
+							
+							// 마지막 페이지가 총 페이지 수 보다 크면 endPage를 pageCount로 할당
+							if(endPage > pageCount){
+								endPage = pageCount;
+							}
+							
+							if(startPage > pageBlock){ // 페이지 블록수보다 startPage가 클경우 이전 링크 생성
+					%>
+								<a href="list.jsp?pageNumber=<%=startPage-1%>" class="btn btn-primary">이전</a>	
+					<%			
+							}
+							
+							for(int i=startPage; i <= endPage; i++){ // 페이지 블록 번호
+								if(i == currentPage){ // 현재 페이지에는 링크를 설정하지 않음
+					%>
+									<div class="btn btn-outline-light text-dark"><%=i%></div>
+					<%									
+								}else{ // 현재 페이지가 아닌 경우 링크 설정
+					%>
+									<a href="list.jsp?pageNumber=<%=i%>" class="btn btn-outline-dark"><%=i %></a>
+					<%	
+								}
+							} // for end
+							
+							if(endPage < pageCount){ // 현재 블록의 마지막 페이지보다 페이지 전체 블록수가 클경우 다음 링크 생성
+					%>
+								<a href="list.jsp?pageNumber=<%=endPage + 1%>" class="btn btn-primary">다음</a>
+					<%			
+							}
+						}
+					%>
+				</td>
+			</tr>
+		   	
+		   	
+	   	</tbody>
 		</table>
-			<%
-				if(pageNumber !=1) {
-			%>	
-				<a href="list.jsp?pageNumber=<%=pageNumber -1%>" class="btn btn-outline-primary btn-arraw-left">이전</a>
-			<% 	
-				} if (boardDAO.nextPage(pageNumber)) {
-			%>	
-				<a href="list.jsp?pageNumber=<%=pageNumber +1%>" class="btn btn-outline-primary btn-arraw-left">다음</a>
-			<% 			
-				}
-			%>
+		
     </div>
     <div id="Diary" class="container tab-pane fade"><br>
             <table class="table table-striped" style="text-align:center; border: 1px solid #dddddd; overflow: hidden;">
