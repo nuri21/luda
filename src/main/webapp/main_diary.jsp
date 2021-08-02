@@ -6,8 +6,6 @@
 <jsp:useBean id="user" class="user.User" scope="page"></jsp:useBean>
 <jsp:useBean id="board" class="board.Board" scope="page"></jsp:useBean>
 <jsp:setPropertyname="user" property="userID" />
-
-
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -74,18 +72,18 @@
                             <div class="text_box"><a href="main.jsp">Calendar</a></div>
                         </div>
                         <div class="diary">
-                            <div class="icon_box"><a href="main_diary.html"><img src="img/diary_icon.svg" alt=""></a></div>
-                            <div class="text_box"><a href="main_diary.html">Diary</a></div>
+                            <div class="icon_box"><a href="main_diary.jsp"><img src="img/diary_icon.svg" alt=""></a></div>
+                            <div class="text_box"><a href="main_diary.jsp">Diary</a></div>
                         </div>
                     </div>
                 </div>
                 <div class="option_box">
-                    <div class="icon_box"><a href="setting.html"><img src="img/settings_icon.svg" alt=""></div>
-                    <div class="text_box"><a href="setting.html">개발자 문의</a></div>
+                    <div class="icon_box"><a href="setting.jsp"><img src="img/settings_icon.svg" alt=""></div>
+                    <div class="text_box"><a href="setting.jsp">개발자 문의</a></div>
                 </div>
                 <div class="moblie_menu"><!--모바일 화면에서만 쓰이는 메뉴 pc화면에서는 안보임-->
                     <div class="profile">
-
+                        <a><img src="img/hj_image.jpg" style="width:40px;height:40px;border-radius:100%"></a>
                     </div>
                     <div class="logo_box">
                         <img src="img/logo.svg" alt="">
@@ -202,7 +200,7 @@
                     <div class="name_box"><%=userID%></div>
                     <div class="btn_box">
                     <div class="logout_btn">
-                        <div class="text"><a href="logout.jsp">로그아웃</div>
+                        <div class="text" id="logout"><a href="logout.jsp">로그아웃</div>
                     </div>
                     <div class="user_update_btn">
                         <div class="text">회원정보 수정</div>
@@ -212,7 +210,7 @@
                     </div>
                     </div>
                 </div>
-                <form class="diary_edit_form" action="" method="post"> <!--form문으로 바꿔서 값을 jsp파일로 전달할 수 있게 수정-->
+                <form class="diary_edit_form" action="" method="post" enctype="multipart/form-data"> <!--form문으로 바꿔서 값을 jsp파일로 전달할 수 있게 수정-->
                     <div class="x_btn">
                         <span></span>
                         <span></span>
@@ -220,20 +218,21 @@
                     <div class="title">일기쓰기</div>
                     <div class="date">
                         <div class="text">날짜&nbsp;</div>
-                        <input type="text" id="diary_date" name="date" readonly>
+                        <input type="text" id="diary_date" name="writeDate" readonly>
                     </div>
                     <div class="image">
                         <div class="text">사진&nbsp;</div>
-                        <input type="file" name="image">
+                        <input type="file" name="file" id="input_img"
+                        accept="image/jpeg, image/jpg, image/png">
                     </div>
                     <div class="img_preview">
-                        <img src="" alt="">
+                        <img src="img/photo.png" alt="">
                     </div> <!--이미지 업로드 하면 미리 볼 수 있는 컨테이너-->
                     <div class="contents_area">
                         <div class="text">내용</div>
-                        <textarea id="diary_text"type="text" name="contents" rows="6" cols="30"></textarea>
+                        <textarea id="diary_text" name="contents" rows="6" cols="30"></textarea>
                     </div>
-                    <input class="button" type="submit" value="일기 쓰기">
+                    <input class="button" type="submit" value="일기쓰기">
                 </form>
                 <div class="moblie_left_btn_box">
                     <div class="add_diary">+diary</div>
@@ -242,5 +241,16 @@
         </div>
     </div>
 </body>
+<script>
+    var uid = '<%=(String)session.getAttribute("userID")%>';
 
+    if(uid=="null"){ 
+        document.querySelector(".photo_click_box .logout_btn #logout a").innerHTML = "로그인";
+        $(".photo_click_box .logout_btn #logout a").attr("href", "login.jsp");
+    }
+    else{
+        document.querySelector(".photo_click_box .logout_btn #logout a").innerHTML = "로그아웃";
+        $(".photo_click_box .logout_btn #logout a").attr("href", "logout.jsp");
+    }
+  </script>
 </html>

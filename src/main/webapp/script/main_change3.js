@@ -225,10 +225,10 @@ $(document).ready(function(){
         location.href = "main.jsp";
     });
     $(".diary_icon").click(function(){
-        location.href = "main_diary.html";
+        location.href = "main_diary.jsp";
     });
     $(".option_icon").click(function(){
-        location.href = "setting.html";
+        location.href = "setting.jsp";
     });
 
     //프로필 사진 클릭

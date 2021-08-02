@@ -7,6 +7,7 @@ public class FileDTO {
 	private int fileIdx;
 	private String userID;
 	private String writeDate;
+	private String currentTime;
 	private String fileName;
 	private String fileRealName;
 	private String fileContents;
@@ -15,6 +16,7 @@ public class FileDTO {
 	public int getFileIdx() {
 		return fileIdx;
 	}
+
 	public void setFileIdx(int fileIdx) {
 		this.fileIdx = fileIdx;
 	}
@@ -30,6 +32,14 @@ public class FileDTO {
 	public void setWriteDate(String writeDate) {
 		this.writeDate = writeDate;
 	}
+	
+	public String getCurrentTime() {
+		return currentTime;
+	}
+	public void setCurrentTime(String currentTime) {
+		this.currentTime = currentTime;
+	}
+	
 	public String getFileName() {
 		return fileName;
 	}
@@ -55,12 +65,13 @@ public class FileDTO {
 		this.fileAvailable = fileAvailable;
 	}
 	
-	public FileDTO(int fileIdx, String userID, String writeDate, String fileName, String fileRealName,
+	public FileDTO(int fileIdx, String userID, String writeDate, String currentTime, String fileName, String fileRealName,
 			String fileContents, int fileAvailable) {
 		super();
 		this.fileIdx = fileIdx;
 		this.userID = userID;
 		this.writeDate = writeDate;
+		this.currentTime = currentTime;
 		this.fileName = fileName;
 		this.fileRealName = fileRealName;
 		this.fileContents = fileContents;

@@ -48,18 +48,36 @@ public class FileDAO {
 					e.printStackTrace();
 			}
 			return ""; // 데이터베이스 오류
-		}	
+		}
 		
-		public int upload(String userID, String fileName, String fileRealName, String fileContents) {
-			String SQL = "INSERT INTO luda_file (userID, writeDate, fileName, fileRealName, fileContents, fileAvailable) VALUES (?, ?, ?, ?, ?, ?)";
+		// 게시글 번호 가지고 오는 것
+		public int getNext() {
+			String SQL = "SELECT `index` FROM luda_calendar ORDER BY `index` DESC"; // 정렬
 			try {
 				PreparedStatement pstmt = conn.prepareStatement(SQL);
+				rs = pstmt.executeQuery();
+				if(rs.next()) {
+					return rs.getInt(1) + 1;
+				}
+				return 1; //첫 번째 게시물인 경우
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			return -1; //데이터베이스 오류
+		}
+		
+		public int upload(String userID, String writeDate, String fileName, String fileRealName, String fileContents) {
+			String SQL = "INSERT INTO luda_file (userID, writeDate, fileName, fileRealName, fileContents, fileAvailable) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			try {
+				PreparedStatement pstmt = conn.prepareStatement(SQL);
+				pstmt.setInt(1, getNext());
 				pstmt.setString(2, userID);
-				pstmt.setString(3, getDate());
-				pstmt.setString(4, fileName);
-				pstmt.setString(5, fileRealName);
-				pstmt.setString(6, fileContents);
-				pstmt.setInt(7, 1);
+				pstmt.setString(3, writeDate);
+				pstmt.setString(4, getDate());
+				pstmt.setString(5, fileName);
+				pstmt.setString(6, fileRealName);
+				pstmt.setString(7, fileContents);
+				pstmt.setInt(8, 1);
 				return pstmt.executeUpdate();
 			}catch (Exception e) {
 				e.printStackTrace();

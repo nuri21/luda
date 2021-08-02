@@ -19,6 +19,8 @@ $(document).ready(function(){
     $(".right_box #mini_calendar").css({"backgroundColor":right_box_color});
     $(".right_box .top_box .x_btn span").css({"backgroundColor":text_color});
 
+    
+
     $(window).resize(function(){
         window_size = $(window).width();
         console.log($(".right_box").width());
@@ -109,11 +111,33 @@ $(document).ready(function(){
     $(".diary_edit_form .x_btn").click(function(){
         $(".diary_edit_form").css({"display":"none"});
         $(".black_box").css({"display":"none"});
+        $(".img_preview img").attr("src","img/photo.png");
+        var filename = $(".img_preview img")[0].files[0].name;
+        console.log(filename);
     });
 
     $(".moblie_left_btn_box .add_diary").click(function(){
         $(".diary_edit_form").css({"display":"block"});
         $(".black_box").css({"display":"block"});
+    });
+
+    //이미지 객체 타입으로 이미지 확장자 밸리데이션
+    var validateType = function(img){
+        return (['image/jpeg','image/jpg','image/png'].indexOf(img.type) > -1);
+    }
+
+    // 파일 선택 필드에 이벤트 리스너 등록
+    document.getElementById('input_img').addEventListener('change', function(e){
+    let elem = e.target;
+    if(validateType(elem.files[0])){
+        let preview = document.querySelector('.img_preview img');
+        preview.src = URL.createObjectURL(elem.files[0]); //파일 객체에서 이미지 데이터 가져옴.
+        preview.onload = function() {
+            URL.revokeObjectURL(preview.src); //URL 객체 해제
+        }
+    }else{
+            console.log('이미지 파일이 아닙니다.');
+        }
     });
 
     function setCookie(name, value, day) {

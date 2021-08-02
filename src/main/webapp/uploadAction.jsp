@@ -14,24 +14,39 @@
 	<title>Insert title here</title>
 </head>
 <body>
+	<%
+		String userID = null;
+		if(session.getAttribute("userID") != null ) {
+			userID = (String)session.getAttribute("userID");
+		}
+		
+	%>
+
 <%
 	String directory = application.getRealPath("/upload/");
-	int maxSize = 1024 * 1024 * 15; 
+	ServletContext context = getServletContext();
+	int maxSize = 1024 * 1024 * 100; 
 	String encoding = "UTF-8";
 	
-	// 객체, 경로, 파일크기, 인코딩방식, 중복네임처리방법
-	MultipartRequest multipartRequest =
-	      new MultipartRequest(request, directory,
-	      maxSize, encoding, new DefaultFileRenamePolicy());
+
+	try{ MultipartRequest multipartRequest 
+	= new MultipartRequest(request, directory, maxSize, encoding, 
+	      new DefaultFileRenamePolicy());
 	
-	String userID = (String)session.getAttribute("userID");
+	String writeDate = multipartRequest.getParameter("writeDate");
 	String fileName = multipartRequest.getOriginalFileName("file");
 	String fileRealName = multipartRequest.getFilesystemName("file");
 	String fileContents = multipartRequest.getParameter("fileContents");
 	
-	new FileDAO().upload(userID, fileName, fileRealName, fileContents);
+	new FileDAO().upload(userID, writeDate, fileName, fileRealName, fileContents);
 	
+	} catch(Exception e){
+		e.printStackTrace();
+	    }
 
 %>
+
+
+
 </body>
 </html>

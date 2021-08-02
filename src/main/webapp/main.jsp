@@ -203,6 +203,18 @@
                     calendar.changeView('timeGridDay');
                 }
             });
+
+            //세션값에 아이디 있으면 로그아웃으로 표시 없으면 로그인으로 표시
+            var uid = '<%=(String)session.getAttribute("userID")%>';
+
+            if(uid=="null"){ 
+                document.querySelector(".photo_click_box .logout_btn #logout a").innerHTML = "로그인";
+                $(".photo_click_box .logout_btn #logout a").attr("href", "login.jsp");
+            }
+            else{
+                document.querySelector(".photo_click_box .logout_btn #logout a").innerHTML = "로그아웃";
+                $(".photo_click_box .logout_btn #logout a").attr("href", "logout.jsp");
+            }
         });
     });
     </script>
@@ -248,7 +260,7 @@
                 </div>
                 <div class="moblie_menu"><!--모바일 화면에서만 쓰이는 메뉴 pc화면에서는 안보임-->
                     <div class="profile">
-
+                        <a><img src="img/hj_image.jpg" style="width:40px;height:40px;border-radius:100%"></a>
                     </div>
                     <div class="logo_box">
                         <img src="img/logo.svg" alt="">
@@ -271,7 +283,6 @@
                     </div>
                     <div class="moblie_left_btn_box">
                         <div class="add_event">+event</div>
-                        <div class="list_btn">list</div>
                     </div>
                 </div>
                 <div class="right_box">
@@ -369,15 +380,15 @@
                 </div>
                 <div class="title">이벤트를 입력해주세요</div>
                 <div class="start_date">
-                    <div class="text">시작 일자</div>
+                    <div class="text">시작일</div>
                     <input type="text" id="datepicker1" name="startDate">
                 </div>
                 <div class="end_date">
-                    <div class="text">종료 일자</div>
+                    <div class="text">종료일</div>
                     <input type="text" id="datepicker2" name="endDate">
                 </div>
                 <div class="contents_box">
-                    <div class="text">일정 이름</div>
+                    <div class="text">일정</div>
                     <input type="text" name="content" maxlength="100">
                 </div>
                 <input class="button" type="submit" value="일정 추가"></input>
@@ -390,7 +401,7 @@
                 <div class="name_box" style="font-size:14px;"><%=userID%></div>
                 <div class="btn_box">
                     <div class="logout_btn">
-                        <div class="text"><a href="logout.jsp">로그아웃</div>
+                        <div class="text" id="logout"><a href="logout.jsp">로그아웃</a></div>
                     </div>
                     <div class="user_update_btn">
                         <div class="text">회원정보 수정</div>
@@ -403,5 +414,4 @@
         </div>
     </div>
 </body>
-
 </html>

@@ -214,6 +214,7 @@
     height: 40%;
     background-color: #7690da;
     border-radius: 10px;
+    font-size: 12px;
   }
   section .right_box .top_box .photo {
     width: 50px;
@@ -562,7 +563,6 @@
   .diary_edit_form .img_preview img{
     width:calc(150px * 0.9);
     height:90%;
-    background-color: lightgreen;
   }
   .diary_edit_form .contents_area{
     margin-bottom: 10px;
@@ -648,6 +648,10 @@
     background-color: orchid;
     border-radius: 100%;
     cursor: pointer;
+  }
+  header .moblie_menu .profile img{
+    width:40px;
+    height:40px;
   }
   header .moblie_menu .logo_box {
     width: 100px;
@@ -1070,7 +1074,6 @@
   .diary_edit_form .img_preview img{
     width:calc(150px * 0.9);
     height:90%;
-    background-color: lightgreen;
   }
   .diary_edit_form .contents_area{
     margin-bottom: 10px;
